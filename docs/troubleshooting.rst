@@ -27,14 +27,17 @@ returning ``False``, or runtime messages indicating a CUDA library version confl
 **Cause**: The installed ``cupy`` or PyTorch wheel was built for a different CUDA
 version than the one present on the system.
 
-**Solution**: Install the CUDA 13 extra:
+**Solution**: Install the extra that matches the host driver. Use CUDA 13 for
+R580-series drivers or newer, or CUDA 12.6 for R560/R565-series Linux drivers:
 
 .. code-block:: bash
 
    uv pip install "physiotwin4d[cuda13]"
+   # Older Linux driver:
+   uv pip install "physiotwin4d[cuda12]"
 
-The extra installs CuPy. In uv-managed source environments, PyTorch resolves
-from the CUDA 13.0 wheel index.
+Each extra installs the matching CuPy package. In uv-managed source
+environments, PyTorch resolves from the corresponding CUDA wheel index.
 
 Verify the active CUDA version before reinstalling:
 
@@ -125,7 +128,7 @@ USD Not Animating
    https://developer.nvidia.com/usd.
 
 2. Open the scene in an Omniverse Kit application, switch the viewport to the
-   scene's ``/World/Camera``, and press Play; see :doc:`viewing_usd`.
+   scene's ``/World/Camera``, and press Play; see :doc:`viewing_meshes`.
 
 3. Verify that the generated USD contains time samples.
 
@@ -166,4 +169,3 @@ If you still have issues:
    * CUDA version
    * Complete error message
    * Minimal code to reproduce
-

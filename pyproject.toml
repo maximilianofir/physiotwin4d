@@ -106,6 +106,12 @@ dependencies = [
 
 [tool.uv]
 link-mode = "copy"
+conflicts = [
+    [
+        { extra = "cuda12" },
+        { extra = "cuda13" },
+    ],
+]
 # torch-scatter compiles against torch but does not declare it as a build
 # dependency. Its build environment must therefore be the project environment,
 # so torch (and setuptools) must already be installed before installing the
@@ -117,13 +123,22 @@ no-build-isolation-package = ["torch-scatter"]
 # the interpreter that has no wheel.
 no-build-package = ["antspyx"]
 
-# PyTorch packages default to the CUDA 13.0 wheel index for uv-managed
-# environments. This avoids ambiguous resolution across multiple PyTorch CUDA
-# indexes.
+# Select the matching PyTorch wheel index when a CUDA extra is active. The
+# extras conflict because CUDA 12 and CUDA 13 binaries cannot share one
+# environment.
 [tool.uv.sources]
-torch = { index = "pytorch-cu130" }
-torchvision = { index = "pytorch-cu130" }
-torchaudio = { index = "pytorch-cu130" }
+torch = [
+    { index = "pytorch-cu126", extra = "cuda12" },
+    { index = "pytorch-cu130", extra = "cuda13" },
+]
+torchvision = [
+    { index = "pytorch-cu126", extra = "cuda12" },
+    { index = "pytorch-cu130", extra = "cuda13" },
+]
+torchaudio = [
+    { index = "pytorch-cu126", extra = "cuda12" },
+    { index = "pytorch-cu130", extra = "cuda13" },
+]
 # The PyPI unigradicon release ships no ``unigradicon.finetuning`` module, so
 # finetuning (WorkflowFinetuneICONRegistration, Tutorial 2) needs this branch.
 # Declared as a uv source instead of a PEP 508 direct reference in
@@ -133,11 +148,22 @@ torchaudio = { index = "pytorch-cu130" }
 unigradicon = { git = "https://github.com/uncbiag/uniGradICON.git", branch = "feat-add-finetuning" }
 
 [[tool.uv.index]]
+name = "pytorch-cu126"
+url = "https://download.pytorch.org/whl/cu126"
+explicit = true
+
+[[tool.uv.index]]
 name = "pytorch-cu130"
 url = "https://download.pytorch.org/whl/cu130"
 explicit = true
 
 [project.optional-dependencies]
+cuda12 = [
+    "cupy-cuda12x>=13.6.0",
+    "torch==2.11.0",
+    "torchvision==0.26.0",
+    "torchaudio==2.11.0",
+]
 cuda13 = [
     "cupy-cuda13x>=13.6.0",
     "torch>=2.0.0",
@@ -153,7 +179,7 @@ cuda13 = [
 # torch-scatter wheel exists it is compiled from source against the installed
 # torch, so torch and setuptools must be present first:
 #
-#   pip install "physiotwin4d[cuda13]" setuptools
+#   pip install "physiotwin4d[cuda12]" setuptools
 #   pip install "physiotwin4d[physicsnemo]" --no-build-isolation
 #
 # uv applies --no-build-isolation to torch-scatter automatically via
@@ -162,6 +188,11 @@ physicsnemo = [
     "nvidia-physicsnemo>=2.0.0",
     "torch-geometric>=2.5.0",
     "torch-scatter>=2.1.0",
+]
+viewer = [
+    "trame>=3.9.0",
+    "trame-vtk>=2.8.0",
+    "trame-vuetify>=3.0.0",
 ]
 dev = [
     "bumpver>=2023.0.0",
@@ -220,6 +251,7 @@ all = [
     "physiotwin4d[docs]",
     "physiotwin4d[physicsnemo]",
     "physiotwin4d[test]",
+    "physiotwin4d[viewer]",
 ]
 
 [project.urls]
@@ -244,6 +276,7 @@ physiotwin4d-train-physicsnemo = "physiotwin4d.cli.train_physicsnemo:main"
 physiotwin4d-infer-physicsnemo = "physiotwin4d.cli.infer_physicsnemo:main"
 physiotwin4d-reconstruct-highres-4d-ct = "physiotwin4d.cli.reconstruct_highres_4d_ct:main"
 physiotwin4d-visualize-pca-modes = "physiotwin4d.cli.visualize_pca_modes:main"
+physiotwin4d-view-meshes = "physiotwin4d.cli.view_meshes:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -330,6 +363,8 @@ module = [
     "torch.*",
     "torch_geometric",
     "torch_geometric.*",
+    "trame",
+    "trame.*",
     "totalsegmentator.*",
     "trimesh",
     "trimesh.*",

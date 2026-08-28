@@ -11,7 +11,10 @@ System Requirements
 -------------------
 
 * **Python**: 3.11, 3.12, or 3.13
-* **GPU**: NVIDIA GPU with CUDA 13 — required for full capability and best performance; a CPU-only PyPI installation is a supported fallback, but it is slow, emits a runtime warning, and cannot run the AI-surrogate workflows
+* **GPU**: NVIDIA GPU with a driver compatible with the CUDA 12.6 or CUDA 13
+  build — required for full capability and best performance; a CPU-only PyPI
+  installation is a supported fallback, but it is slow, emits a runtime
+  warning, and cannot run the AI-surrogate workflows
 * **RAM**: 16GB minimum (32GB+ recommended for large datasets)
 * **Storage**: 10GB+ for package and model weights
 * **Visualization**: NVIDIA Omniverse (optional, for USD visualization)
@@ -22,7 +25,7 @@ Software Dependencies
 PhysioTwin4D relies on several key packages:
 
 * **Medical Imaging**: ITK, MONAI, nibabel, PyVista
-* **AI/ML**: PyTorch, CuPy (CUDA 13), transformers, MONAI
+* **AI/ML**: PyTorch, CuPy (CUDA 12 or CUDA 13), transformers, MONAI
 * **Registration**: icon-registration, unigradicon
 * **Visualization**: USD-core, PyVista
 * **Segmentation**: TotalSegmentator
@@ -107,11 +110,18 @@ For development or to get the latest features:
 
 **Step 4: Install PhysioTwin4D**
 
-Install the ``[cuda13]`` extra for the full-capability source install:
+Install the CUDA extra that matches the oldest NVIDIA driver the environment
+must support. CUDA 13 requires an R580-series driver or newer:
 
 .. code-block:: bash
 
    uv pip install -e ".[cuda13]"
+
+For R560/R565-series Linux drivers, use the CUDA 12.6 build instead:
+
+.. code-block:: bash
+
+   uv pip install -e ".[cuda12]"
 
 Without the extra:
 
@@ -119,8 +129,7 @@ Without the extra:
 
    uv pip install -e "."
 
-still uses the CUDA 13.0 PyTorch wheel index by default, but leaves out CuPy
-and the GPU acceleration that depends on it.
+does not select a CUDA-specific PyTorch index and leaves out CuPy.
 
 Optional Dependencies
 =====================
@@ -227,10 +236,12 @@ GPU Setup
 CUDA Installation
 -----------------
 
-An NVIDIA GPU is strongly recommended. CUDA 13 is supported via the optional
-extra:
+An NVIDIA GPU is strongly recommended. Two mutually exclusive CUDA extras are
+available:
 
 * **CUDA 13** — installed when you use the ``[cuda13]`` extra (recommended)
+* **CUDA 12.6** — installed when you use the ``[cuda12]`` extra for older
+  Linux drivers
 
 A plain ``pip install physiotwin4d`` installs a CPU-only build. It runs
 without error but emits a ``UserWarning`` at import time and will be
@@ -261,9 +272,9 @@ If CUDA is not yet installed, download the CUDA Toolkit from
 PyTorch with CUDA
 -----------------
 
-uv-managed source environments source PyTorch, torchvision, and torchaudio from
-the ``https://download.pytorch.org/whl/cu130`` index by default. To verify the
-active version:
+uv-managed source environments select the ``cu130`` PyTorch index with
+``[cuda13]`` and the ``cu126`` index with ``[cuda12]``. To verify the active
+version:
 
 .. code-block:: python
 
@@ -305,7 +316,7 @@ Solution:
 
 1. Ensure NVIDIA Omniverse is installed
 2. Set the viewport renderer to RTX and switch to the scene's
-   ``/World/Camera``; see :doc:`viewing_usd`
+   ``/World/Camera``; see :doc:`viewing_meshes`
 3. Verify file paths are accessible to Omniverse
 
 Getting Help
@@ -328,4 +339,3 @@ Next Steps
 * Continue to :doc:`quickstart` for your first PhysioTwin4D workflow
 * Explore :doc:`tutorials` for runnable, workflow-by-workflow examples
 * Read :doc:`cli_scripts/overview` for detailed command-line workflows
-

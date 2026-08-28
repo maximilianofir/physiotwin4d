@@ -28,7 +28,7 @@ Do I need NVIDIA Omniverse?
 
 Omniverse is the recommended way to view the USD scenes: its RTX renderer is
 what evaluates the material properties assigned to each tissue. See
-:doc:`viewing_usd`. For the intermediate results you can also use:
+:doc:`viewing_meshes`. For the intermediate results you can also use:
 
 * PyVista, for the intermediate ``.vtp`` / ``.vtu`` meshes
 * ParaView, likewise for the VTK files
@@ -55,15 +55,19 @@ workloads an NVIDIA GPU is strongly recommended.
 Which CUDA version is required?
 --------------------------------
 
-CUDA 13 is supported. Install the CUDA 13 extra for GPU acceleration:
+CUDA 13 and CUDA 12.6 are supported through mutually exclusive extras. Use
+CUDA 13 for R580-series drivers or newer, and CUDA 12.6 for older supported
+Linux drivers such as R560 and R565:
 
 .. code-block:: bash
 
    uv pip install "physiotwin4d[cuda13]"
+   # Older Linux driver:
+   uv pip install "physiotwin4d[cuda12]"
 
-The extra installs CuPy. In uv-managed source environments, PyTorch,
-torchvision, and torchaudio are sourced from
-``https://download.pytorch.org/whl/cu130`` by default.
+The extras install the matching CuPy package. In uv-managed source
+environments, PyTorch, torchvision, and torchaudio use the corresponding
+``cu130`` or ``cu126`` wheel index.
 
 What Python version is required?
 ---------------------------------
@@ -123,4 +127,3 @@ More Questions?
 * Check the :doc:`cli_scripts/heart_gated_ct`
 * Browse :doc:`tutorials`
 * Open an issue on `GitHub <https://github.com/Project-MONAI/physiotwin4d/issues>`_
-

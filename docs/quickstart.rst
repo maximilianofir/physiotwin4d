@@ -10,9 +10,10 @@ Prerequisites
 Before starting, ensure you have:
 
 * PhysioTwin4D installed (see :doc:`installation`)
-* NVIDIA GPU with CUDA 13 - recommended for production performance; see
-  :doc:`installation` for the ``[cuda13]`` extra. A CPU-only PyPI install works
-  for evaluation but is slow.
+* NVIDIA GPU with a compatible CUDA 12.6 or CUDA 13 build - recommended for
+  production performance; see :doc:`installation` for the ``[cuda12]`` and
+  ``[cuda13]`` extras. A CPU-only PyPI install works for evaluation but is
+  slow.
 * Disk space for the sample datasets (~10-20 GB for the full set; each dataset
   README lists its own size)
 
@@ -324,7 +325,7 @@ material properties assigned to each tissue. Note that the ``usd-core``
 package installed with PhysioTwin4D provides the OpenUSD *libraries* only and
 contains no viewer.
 
-:doc:`viewing_usd` covers where to get it, how to set it up, and how to open a
+:doc:`viewing_meshes` covers where to get it, how to set it up, and how to open a
 PhysioTwin4D scene — including switching to the camera defined in the scene,
 whose clipping planes are fitted to the anatomy's scale.
 
