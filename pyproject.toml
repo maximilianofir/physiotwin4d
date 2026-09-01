@@ -179,11 +179,12 @@ cuda13 = [
 # torch-scatter wheel exists it is compiled from source against the installed
 # torch, so torch and setuptools must be present first:
 #
-#   pip install "physiotwin4d[cuda12]" setuptools
-#   pip install "physiotwin4d[physicsnemo]" --no-build-isolation
+#   uv pip install --torch-backend cu126 \
+#       "physiotwin4d[cuda12]" setuptools
+#   uv pip install "physiotwin4d[physicsnemo]" --no-build-isolation
 #
 # uv applies --no-build-isolation to torch-scatter automatically via
-# no-build-isolation-package above, so the second flag is only needed for pip.
+# no-build-isolation-package above.
 physicsnemo = [
     "nvidia-physicsnemo>=2.0.0",
     "torch-geometric>=2.5.0",

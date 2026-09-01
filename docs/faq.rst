@@ -47,7 +47,7 @@ a ``UserWarning`` is emitted (visible by default in all standard Python runs):
    CuPy is not installed — GPU acceleration is unavailable and processing will be
    slow. Re-install with uv to get CuPy and CUDA-enabled PyTorch in one step
    (pip alone will not select the correct CUDA wheel):
-     uv pip install 'physiotwin4d[cuda13]'  # CUDA 13
+     uv pip install --torch-backend cu130 'physiotwin4d[cuda13]'  # CUDA 13
 
 CPU-only mode is suitable for evaluation and small datasets. For production
 workloads an NVIDIA GPU is strongly recommended.
@@ -61,13 +61,14 @@ Linux drivers such as R560 and R565:
 
 .. code-block:: bash
 
-   uv pip install "physiotwin4d[cuda13]"
+   uv pip install --torch-backend cu130 "physiotwin4d[cuda13]"
    # Older Linux driver:
-   uv pip install "physiotwin4d[cuda12]"
+   uv pip install --torch-backend cu126 "physiotwin4d[cuda12]"
 
-The extras install the matching CuPy package. In uv-managed source
-environments, PyTorch, torchvision, and torchaudio use the corresponding
-``cu130`` or ``cu126`` wheel index.
+The extras install the matching CuPy package. ``--torch-backend`` explicitly
+selects the corresponding ``cu130`` or ``cu126`` PyTorch wheel index for
+published installs. Source checkouts also declare these mappings in
+``pyproject.toml``.
 
 What Python version is required?
 ---------------------------------
