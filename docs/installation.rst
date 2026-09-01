@@ -38,12 +38,20 @@ Installation Methods
 Method 1: Install from PyPI (Recommended)
 ------------------------------------------
 
-Install the ``[all]`` extra. It enables every feature and gives the best
-performance:
+For R580-series drivers or newer, install the ``[all]`` extra with the CUDA 13
+PyTorch backend. It enables every feature and gives the best performance:
 
 .. code-block:: bash
 
-   uv pip install "physiotwin4d[all]"
+   uv pip install --torch-backend cu130 "physiotwin4d[all]"
+
+For R560/R565-series Linux drivers, install the same optional features with
+the CUDA 12.6 extra instead of ``[all]``, which selects ``[cuda13]``:
+
+.. code-block:: bash
+
+   uv pip install --torch-backend cu126 \
+       "physiotwin4d[cuda12,dev,docs,physicsnemo,test,viewer]"
 
 The ``[all]`` extra installs PhysicsNeMo, CuPy, and dependencies for 
 development, testing, and documenting. In uv-managed source environments,
